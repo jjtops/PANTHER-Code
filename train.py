@@ -107,58 +107,6 @@ def val2():
             print(f"✅ Saved new best model with loss {utils.best_score:.4f}")
 
 
-# def val():
-#     model.eval()
-#     val_loss = 0.0
-#
-#     val_iter = iter(queue2)
-#     loopVal = tqdm(range(len(queue2)), leave=False)
-#
-#
-#     with torch.no_grad():
-#         for _ in loopVal:
-#             b = next(val_iter)
-#             img = b['image'][tio.DATA].float().to(device)
-#             mask = b['label'][tio.DATA].float().to(device)
-#
-#
-#             img = img.permute(0, 3, 1, 2)
-#             mask = mask.permute(0, 3, 1, 2)
-#
-#             img = img.unsqueeze(1)
-#             mask = mask.unsqueeze(1)
-#
-#
-#             logits = model(img)
-#             loss = criterion(logits, mask)
-#             val_loss += loss.item()
-#
-#             pred = torch.sigmoid(logits) > 0.5
-#             metric(y_pred=pred.float(), y=mask)
-#
-#             loopVal.set_description(f"Val{valNum}: ")
-#             loopVal.set_postfix(loss=loss.item())
-#
-#     mean_dice = metric.aggregate().item()
-#     metric.reset()
-#
-#     avg_val_loss = val_loss / len(queue2)
-#     scheduler.step(avg_val_loss)
-#     print(f"Val Number{valNum} - Average Loss: {avg_val_loss:.4f} Mean Dice: {mean_dice:.4f}")
-#
-#
-#         # ---- SAVE MODEL IF BETTER ----
-#     if mean_dice > utils.best_score:
-#         utils.best_score = mean_dice
-#         benchmark = {
-#             'model_state_dict': model.state_dict(),
-#             'loss': mean_dice,
-#             'optimizer_state_dict': optimizer.state_dict(),
-#         }
-#
-#         torch.save(benchmark, "bestPre.pth")
-#         print(f"✅ Saved new best model with loss {utils.best_score:.4f}")
-
 
 
 if __name__ == "__main__":
@@ -173,32 +121,4 @@ if __name__ == "__main__":
 
 
 
-
-
-
-
-#---------------------
-#best_model2.pth --> clean model, being trained with correct labels
-# and data aug, using BCEwLogits. Trained for 5 Full Epochs
-#---------------------
-
-
-
-
-#---------------------
-#best_model.pth --> 1) clean model, trained with less augmentations but still some
-# correct labesl, with 1.0Dsc and 1.0BCE, reached .71 after 24 epochs, 2) attempted
-#to then train for another 20 epochs, using 1.0 dsc, 0.5 bce, 0.5 boundary ; did not work
-#am pretty sure never got below .71 so that was never saved.
-#---------------------
-
-
-
-#---------------------
-#best_modelV2.pth --> clean model, trained with even less augmentations than prev, first training
-# wtih 1.0Dsc and 1.0bce, the UNET this time will feature *batchnorm*
-#
-#
-#
-#---------------------
 
