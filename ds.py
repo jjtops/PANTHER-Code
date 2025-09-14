@@ -103,29 +103,3 @@ val_sampler = tio.UniformSampler(patch_size=(96, 96, 48))
 
 setVal = T2WDataset(utils.val_mask1, val_aug)
 subjectsVal = tio.SubjectsDataset([setVal[i] for i in range(len(setVal))])
-# queue2 = tio.Queue(
-#     subjectsVal,
-#     max_length=10,
-#     # samples_per_volume=8,
-#     # sampler = val_sampler,
-#     num_workers=0,
-#     shuffle_subjects=True,
-#     shuffle_patches=True
-# )
-
-
-
-if __name__ == "__main__":
-    iter_queue = iter(queue)
-    batch =  next(iter_queue)
-    img = batch['image'][tio.DATA].float()
-    mask = batch['label'][tio.DATA].float()
-    print("done")
-    print(img.shape)
-    print(len(queue))
-    print("Queue image stats:")
-    print(f"Mean: {img.mean():.3f}")
-    print(f"Std: {img.std():.3f}")
-    print(f"Min: {img.min():.3f}")
-    print(f"Max: {img.max():.3f}")
-    # print(info.interactive_slice_viewer_img(img))
