@@ -29,7 +29,7 @@ def dataset_info (path, plot=False):
         plt.imshow(np_arr[np_arr.shape[0]//2], cmap='gray')
         plt.show()
 
-
+#not all images are the same size, was required 
 def size_info(path):
     tot_d = []
     tot_w = []
@@ -39,8 +39,6 @@ def size_info(path):
         image_array = sitk.GetArrayFromImage(image)
         tot_d.append(image_array.shape[0])
         tot_w.append(image_array.shape[1])
-        # if(image_array.shape[1] == 560):
-        #     z = i
         tot_h.append(image_array.shape[2])
 
     depth_counts = Counter(tot_d)
@@ -133,70 +131,7 @@ def count_labels_dataset(path_list):
     return total_counts, total_percentages
 
 
-if __name__ == "__main__":
-    # print(utils.val_mask1[0] + ".mha")
-    print(dataset_info(t2w_mask))
-    # print(size_info(t1w_mask))
-    # interactive_slice_viewer(utils.val_mask1[0] + ".mha")
-    # print(count_labels_dataset(t1w_mask))
 
-    # voxel_total = 0
-    # tot_sum = 0
-    # sq_sum = 0
-    #
-    # for i in t2w:
-    #     arr = sitk.ReadImage(i)
-    #     img = sitk.GetArrayFromImage(arr).astype(np.float32)
-    #
-    #     tot_sum += img.sum()
-    #     sq_sum += (img ** 2).sum()
-    #     voxel_total += img.size
-    #
-    #
-    # glb_avg = tot_sum / voxel_total
-    # glb_std = np.sqrt((sq_sum / voxel_total) - (glb_avg ** 2))
-    #
-    # print(f'Global Avg {glb_avg}, Global Stand Dev {glb_std}')
-
-
-
-
-
-
-
-#
-
-
-# ex1 = t2w[1]
-# ar = sitk.ReadImage(ex1)
-# im = sitk.GetArrayFromImage(ar).astype(np.float32)#
-# p1, p99 = np.percentile(im, [1,99])
-# print(p1, p99)
-#
-# im_norm = (im - glb_avg) / glb_std#
-# pp1, pp99 = np.percentile(im_norm, [1,99])
-# print(pp1, pp99)
-#
-
-# ex2 = t2w_mask[4]
-# lab = sitk.ReadImage(ex2)
-# mask = sitk.GetArrayFromImage(lab)
-# p11, p999 = np.percentile(mask, [1, 99])
-# print(p11, p999)
-
-
-
-
-# print(z)
-
-
-
-# counts = []
-# for p in t2w_mask[:10]:  # sample a few
-#     a = sitk.GetArrayFromImage(sitk.ReadImage(p)).astype(np.int16)
-#     u, c = np.unique(a, return_counts=True)
-#     counts.append(dict(zip(u.tolist(), c.tolist())))
-# print(counts)
 
 
 
