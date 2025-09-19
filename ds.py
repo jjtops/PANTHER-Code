@@ -9,8 +9,8 @@ import info
 
 
 def normalize_func(tensor):
-    return (tensor - 76.701) / 108.946 # stats for T1
-    # return (tensor - 122.288) / 273.525 stats for T2
+    return (tensor - 76.701) / 108.946 # stats for T1 Dataset 
+    
 
 norm = tio.Lambda(
     normalize_func,
@@ -19,15 +19,15 @@ norm = tio.Lambda(
 
 
 conserv_augments = tio.Compose([
-    # Only intensity augmentations
+    # Intensity Augmentations w low probabilities, don't want too much noise
     tio.RandomBiasField(p=0.2, coefficients=(0.0, 0.2), include=('image',)),
     tio.RandomGamma(p=0.2, log_gamma=(-0.1, 0.1), include=('image',)),
     tio.RandomNoise(p=0.15, mean=0, std=(0.0, 0.01), include=('image',)),
 
-    # Only horizontal flips
+
     tio.RandomFlip(axes=(0,), p=0.5),
 
-    # Minimal affine transformation
+    
     tio.RandomAffine(
         scales=(0.98, 1.02),
         degrees=(0, 1, 0),
@@ -57,13 +57,14 @@ class T2WDataset(Dataset):
 
 
 
-
+        #creates a TorchIO subject to be used and unpacked in a Queue
         subject = tio.Subject(
             image=tio.ScalarImage(img_pth),
             label=tio.LabelMap(mask_pth),
         )
 
-
+        #the dataset includes 3 labels, 0: background 1:tumor 
+        #2: pancreas, this creates a mask of only 2 labels
         lbl = subject['label'].data.clone()
         lbl = (lbl == 1).long()
         subject['label'].set_data(lbl)
@@ -77,9 +78,10 @@ class T2WDataset(Dataset):
 
 
 
-
+#large boosting of labels as the dataset is heavily 
+#unbalanced, with 99% background and >1% tumor
 train_sampler = tio.LabelSampler(
-    patch_size=(96, 96, 48),
+    patch_size=(96, 96, 48), #creates sufficient samples per subject
     label_name='label',
     label_probabilities={0:0.1, 1:0.9}
 )
@@ -98,7 +100,8 @@ queue = tio.Queue(
     shuffle_patches=True
 )
 
-
+#uniform sampler is used to replicated frequencies that aren't
+#as extreme as the ones created
 val_sampler = tio.UniformSampler(patch_size=(96, 96, 48))
 
 setVal = T2WDataset(utils.val_mask1, val_aug)
