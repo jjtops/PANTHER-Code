@@ -10,9 +10,9 @@ def train():
     for epoch in range(epochs):
         model.train()
         epoch_loss = 0.0
-
+        #makes the queue iterable, allows next to be called 
         iter_queue = iter(queue)
-
+        #creates an informative progress bar
         loop = tqdm(range(len(queue)), leave=False, desc=f"Epoch[{epoch+1}/{epochs}")
 
         for _ in loop:
@@ -46,9 +46,12 @@ def train():
         print(f"Epoch [{epoch+1}/{epochs}] - Average Loss: {avg_epoch_loss:.4f}")
         val2()
 
-valNum = 1
-def val2():
 
+
+#similar code to the inference file, this also uses 
+#the agregators to create full images in order to see
+# how the model is progressing
+def val2():
     with torch.no_grad():
         val_loss = 0.0
         metric.reset()
@@ -94,7 +97,7 @@ def val2():
         print(f"Val Number{valNum} - Average Loss: {avg_val_loss:.4f} Mean Dice: {mean_dice:.4f}")
 
 
-            # ---- SAVE MODEL IF BETTER ----
+            # saves model based on validation dice score
         if mean_dice > utils.best_score:
             utils.best_score = mean_dice
             benchmark = {
