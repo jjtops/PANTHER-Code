@@ -2,7 +2,9 @@ import torch
 import torch.nn as nn
 
 
-
+#standard 3D Unet implementation 
+#comments are kept throughout to keep 
+#track of dimensions
 
 class DoubleConv3D(nn.Module):
     def __init__(self, in_channels, out_channels):
